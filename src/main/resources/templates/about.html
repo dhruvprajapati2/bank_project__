@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>About Us | Platinum Reserve Bank</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/banking.css">
+    <style>
+        body {
+            background: #f8fafc;
+            color: #0f172a;
+        }
+
+        .page-container {
+            padding: 24px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            color: white;
+            border-radius: 20px;
+            padding: 32px;
+            box-shadow: 0 18px 42px rgba(15, 23, 42, 0.12);
+            margin-bottom: 24px;
+        }
+
+        .hero h1 {
+            margin: 0 0 12px;
+            font-size: 2.35rem;
+        }
+
+        .hero p {
+            max-width: 720px;
+            line-height: 1.7;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1.3fr 0.7fr;
+            gap: 22px;
+        }
+
+        .content-card,
+        .info-card {
+            background: white;
+            border-radius: 18px;
+            padding: 26px;
+            box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
+        }
+
+        .content-card h2,
+        .info-card h3 {
+            margin-top: 0;
+        }
+
+        .feature-list {
+            margin: 18px 0 0;
+            padding-left: 18px;
+            color: #334155;
+            line-height: 1.9;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .info-item i {
+            color: #0284c7;
+            font-size: 1.4rem;
+            min-width: 36px;
+        }
+
+        .cta-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: #0284c7;
+            font-weight: 700;
+            margin-top: 18px;
+            text-decoration: none;
+        }
+
+        @media (max-width: 900px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-container">
+        <div class="hero">
+            <h1>About Platinum Reserve Bank</h1>
+            <p>Platinum Reserve Bank is built to give you a secure, modern digital banking experience with instant transfers, personalized support, and reliable account management.</p>
+        </div>
+
+        <div class="content-grid">
+            <div class="content-card">
+                <h2>Our Mission</h2>
+                <p>To deliver trusted banking services that empower customers with intelligent tools, fast support, and transparent account control.</p>
+
+                <h2>What We Value</h2>
+                <ul class="feature-list">
+                    <li>Customer-first digital banking</li>
+                    <li>Secure transactions and account safety</li>
+                    <li>Clear communication and support</li>
+                    <li>Fast and reliable service delivery</li>
+                </ul>
+
+                <h2>Our Services</h2>
+                <ul class="feature-list">
+                    <li>Account balance and transaction history</li>
+                    <li>Easy funds transfer and payment support</li>
+                    <li>ATM application and card services</li>
+                    <li>Profile management and support requests</li>
+                </ul>
+            </div>
+
+            <div class="info-card">
+                <h3>Get Started</h3>
+                <div class="info-item">
+                    <i class="fas fa-user-check"></i>
+                    <div>
+                        <strong>Trusted Accounts</strong>
+                        <p>Open an account and enjoy secure banking with every transaction.</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <div>
+                        <strong>Secure Banking</strong>
+                        <p>Your data and transfers are protected with enterprise-grade security.</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-headset"></i>
+                    <div>
+                        <strong>24/7 Support</strong>
+                        <p>Submit a Help request anytime and our team will respond quickly.</p>
+                    </div>
+                </div>
+                <a href="/userdashboard" class="cta-link"><i class="fas fa-arrow-left"></i>Back to Dashboard</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

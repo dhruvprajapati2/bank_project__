@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>ATM Application Requests</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/admin-panel.css">
+    <style>
+        .alert-box {
+            margin-bottom: 14px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .alert-success {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+    </style>
+</head>
+
+<body class="admin-body">
+    <div class="sidebar">
+        <h2>Bank Admin Panel</h2>
+        <a th:href="@{/admindashboard}">Dashboard</a>
+        <a th:href="@{/adminuser}">Users</a>
+        <a th:href="@{/adminaccount}">Accounts</a>
+        <a th:href="@{/adminRequest}">Account Requests</a>
+        <a th:href="@{/transaction}">Transactions</a>
+        <a class="active" th:href="@{/atmApplications}">ATM Application Requests</a>
+        <a th:href="@{/userReports}">User Reports</a>
+        <a th:href="@{/reports}">Reports</a>
+        <a class="logout" href="/logout">Logout</a>
+    </div>
+
+    <div class="main">
+        <div class="top">
+            <div>
+                <h2>ATM Application Requests</h2>
+                <small>Review ATM card applications and approve them with generated card numbers</small>
+            </div>
+            <div><strong th:text="${#dates.format(#dates.createNow(),'dd MMM yyyy')}"></strong></div>
+        </div>
+
+        <div th:if="${successMessage != null}" class="alert-box alert-success" th:text="${successMessage}"></div>
+        <div th:if="${errorMessage != null}" class="alert-box alert-error" th:text="${errorMessage}"></div>
+
+        <div class="page-card table-wrap">
+            <table class="admin-table">
+                <tr>
+                    <th>ID</th>
+                    <th>Account No</th>
+                    <th>User</th>
+                    <th>Card Type</th>
+                    <th>Mobile</th>
+                    <th>Email</th>
+                    <th>Address</th>
+                    <th>Status</th>
+                    <th>ATM Card No</th>
+                    <th>Applied At</th>
+                    <th>Action</th>
+                </tr>
+                <tr th:each="atmApp : ${applications}">
+                    <td th:text="${atmApp.id}">1</td>
+                    <td th:text="${atmApp.accountNumber}">1234567890</td>
+                    <td th:text="${atmApp.userName}">User</td>
+                    <td th:text="${atmApp.cardType}">Classic</td>
+                    <td th:text="${atmApp.mobile}">9999999999</td>
+                    <td th:text="${atmApp.email}">user@example.com</td>
+                    <td th:text="${atmApp.address}">Address</td>
+                    <td>
+                        <span class="badge"
+                              th:classappend="${atmApp.status == 'APPROVED'} ? ' badge-success' : (${atmApp.status == 'PENDING'} ? ' badge-warning' : ' badge-danger')"
+                              th:text="${atmApp.status}">PENDING</span>
+                    </td>
+                    <td th:text="${atmApp.atmCardNumber != null and !#strings.isEmpty(atmApp.atmCardNumber) ? atmApp.atmCardNumber : '-'}">-</td>
+                    <td th:text="${atmApp.formattedAppliedAt}">17 Apr 2026 10:30</td>
+                    <td>
+                        <form th:action="@{/approveAtmApplication}" method="post" style="display:inline;">
+                            <input type="hidden" name="id" th:value="${atmApp.id}">
+                            <button th:if="${atmApp.status == 'PENDING'}" class="btn-admin" type="submit">Approve</button>
+                            <span th:unless="${atmApp.status == 'PENDING'}" class="subtext">Approved</span>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${applications == null or applications.isEmpty()}">
+                    <td colspan="11" class="subtext">No ATM applications found.</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>

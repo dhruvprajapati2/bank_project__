@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Account Balance</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/banking.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        .balance-wrap {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 26px 14px;
+        }
+
+        .balance-card {
+            width: min(760px, 95%);
+            padding: 28px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.98);
+            border: 1px solid #bfdbfe;
+            box-shadow: 0 20px 40px rgba(2, 132, 199, 0.16);
+            animation: showUp 0.45s ease;
+        }
+
+        @keyframes showUp {
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .title h1 {
+            font-size: 1.9rem;
+            color: #0f172a;
+        }
+
+        .title p {
+            margin-top: 5px;
+            color: #475569;
+        }
+
+        .amount-box {
+            text-align: center;
+            background: linear-gradient(120deg, #0284c7, #0ea5e9);
+            color: #fff;
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 16px;
+        }
+
+        .amount-label {
+            font-size: 0.95rem;
+            opacity: 0.95;
+            margin-bottom: 6px;
+        }
+
+        .amount {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .user-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 10px 18px;
+            margin: 14px 0 18px;
+        }
+
+        .detail {
+            border: 1px solid #dbeafe;
+            border-radius: 12px;
+            padding: 10px 12px;
+            background: #f8fdff;
+        }
+
+        .detail-label {
+            color: #64748b;
+            font-size: 0.82rem;
+            margin-bottom: 3px;
+        }
+
+        .detail-value {
+            color: #0f172a;
+            font-weight: 600;
+            word-break: break-word;
+        }
+
+        .action-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 8px;
+        }
+
+        .action-row .btn {
+            min-width: 150px;
+        }
+
+        @media (max-width: 640px) {
+            .balance-card {
+                padding: 20px 14px;
+            }
+
+            .amount {
+                font-size: 1.65rem;
+            }
+
+            .action-row .btn {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="balance-wrap">
+        <div class="balance-card">
+            <div class="title">
+                <h1><i class="fas fa-wallet"></i> Account Balance</h1>
+                <p>Balance and account holder details</p>
+            </div>
+
+            <div class="amount-box">
+                <div class="amount-label">Available Balance</div>
+                <div class="amount">&#8377; <span th:text="${#numbers.formatDecimal(balance, 1, 2)}">0.00</span></div>
+            </div>
+
+            <div class="user-grid">
+                <div class="detail">
+                    <div class="detail-label">Account Holder</div>
+                    <div class="detail-value" th:text="${user != null ? user.firstName + ' ' + user.lastName : '-'}">User Name</div>
+                </div>
+                <div class="detail">
+                    <div class="detail-label">Account Number</div>
+                    <div class="detail-value" th:text="${account != null ? account.accountNo : '-'}">00000000</div>
+                </div>
+                <div class="detail">
+                    <div class="detail-label">Email</div>
+                    <div class="detail-value" th:text="${user != null ? user.email : '-'}">user@email.com</div>
+                </div>
+                <div class="detail">
+                    <div class="detail-label">Mobile</div>
+                    <div class="detail-value" th:text="${user != null ? user.mobile : '-'}">0000000000</div>
+                </div>
+                <div class="detail">
+                    <div class="detail-label">Branch</div>
+                    <div class="detail-value" th:text="${user != null ? user.branch : '-'}">Main Branch</div>
+                </div>
+                <div class="detail">
+                    <div class="detail-label">Status</div>
+                    <div class="detail-value">Verified</div>
+                </div>
+            </div>
+
+            <div class="action-row">
+                <a href="/depositPage" class="btn"><i class="fas fa-plus"></i> Deposit</a>
+                <a href="/withdrawPage" class="btn"><i class="fas fa-minus"></i> Withdraw</a>
+                <a href="/transferPage" class="btn"><i class="fas fa-right-left"></i> Transfer</a>
+                <a href="/userdashboard" class="btn"><i class="fas fa-house"></i> Back to Home</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

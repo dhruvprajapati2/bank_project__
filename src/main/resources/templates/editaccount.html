@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Edit Account</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/banking.css">
+</head>
+
+<body>
+
+    <h2>Edit Account</h2>
+
+    <form th:action="@{/updateAccount}" method="post" th:object="${account}">
+
+        <!-- IMPORTANT: keep ID -->
+        <input type="hidden" th:field="*{id}" />
+
+        <!-- Account No (readonly) -->
+        <label>Account No:</label>
+        <input type="text" th:field="*{accountNo}" readonly />
+
+        <!-- User Name (editable) -->
+        <label>User Name:</label>
+        <input type="text" th:field="*{userName}" required />
+
+        <!-- Balance (readonly now) -->
+        <label>Balance:</label>
+        <input type="number" th:field="*{balance}" readonly />
+
+        <button type="submit">Update</button>
+
+    </form>
+
+    <!-- DEBUG: print id -->
+    <p>DEBUG ID: <span th:text="*{id}"></span></p>
+
+    <input type="hidden" th:field="*{id}" />
+    <input type="hidden" name="id" th:value="${account.id}" />
+</body>
+
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>User Profile</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/banking.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        .profile-page {
+            min-height: 100vh;
+            padding: 24px 0 34px;
+        }
+
+        .profile-top {
+            width: min(960px, 94%);
+            margin: 0 auto 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .profile-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .profile-card {
+            width: min(960px, 94%);
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.98);
+            border: 1px solid #bfdbfe;
+            border-radius: 18px;
+            box-shadow: 0 18px 38px rgba(2, 132, 199, 0.18);
+            padding: 24px;
+            animation: profileIn 0.45s ease;
+        }
+
+        @keyframes profileIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .name {
+            font-size: 1.8rem;
+            margin: 0 0 16px;
+            color: #0369a1;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 12px 16px;
+        }
+
+        .profile-item {
+            background: #f8fdff;
+            border: 1px solid #dbeafe;
+            border-radius: 12px;
+            padding: 11px 12px;
+        }
+
+        .item-label {
+            color: #64748b;
+            font-size: 0.82rem;
+            margin-bottom: 3px;
+        }
+
+        .item-value {
+            color: #0f172a;
+            font-weight: 600;
+            word-break: break-word;
+        }
+
+        .actions {
+            margin-top: 18px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 720px) {
+            .profile-card {
+                padding: 18px 14px;
+            }
+
+            .name {
+                font-size: 1.4rem;
+            }
+
+            .actions .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="profile-page">
+        <div class="profile-top">
+            <div class="profile-title"><i class="fas fa-user-circle"></i> My Profile</div>
+            <a href="/userdashboard" class="btn"><i class="fas fa-house"></i> Back to Home</a>
+        </div>
+
+        <div class="profile-card">
+            <h2 class="name" th:text="${user.firstName + ' ' + user.lastName}">User Name</h2>
+
+            <div class="profile-grid">
+                <div class="profile-item">
+                    <div class="item-label">Account Number</div>
+                    <div class="item-value" th:text="${account.accountNo}">00000000</div>
+                </div>
+
+                <div class="profile-item">
+                    <div class="item-label">Gender</div>
+                    <div class="item-value" th:text="${user.gender}">-</div>
+                </div>
+
+                <div class="profile-item">
+                    <div class="item-label">Date of Birth</div>
+                    <div class="item-value" th:text="${user.dob}">-</div>
+                </div>
+
+                <div class="profile-item">
+                    <div class="item-label">Aadhar Number</div>
+                    <div class="item-value" th:text="${'XXXX-XXXX-' + user.adharNo.substring(8)}">XXXX-XXXX-1234</div>
+                </div>
+
+                <div class="profile-item">
+                    <div class="item-label">Email</div>
+                    <div class="item-value" th:text="${user.email}">user@email.com</div>
+                </div>
+
+                <div class="profile-item">
+                    <div class="item-label">Mobile</div>
+                    <div class="item-value" th:text="${user.mobile}">0000000000</div>
+                </div>
+
+                <div class="profile-item">
+                    <div class="item-label">Branch</div>
+                    <div class="item-value" th:text="${user.branch}">Main Branch</div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <a th:href="@{/editProfile}" class="btn"><i class="fas fa-user-pen"></i> Edit Profile</a>
+                <a href="/enterPin" class="btn"><i class="fas fa-wallet"></i> Check Balance</a>
+                <a href="/userdashboard" class="btn"><i class="fas fa-arrow-left"></i> Back to Home</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

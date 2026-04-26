@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>User Reports</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/admin-panel.css">
+</head>
+
+<body class="admin-body">
+    <div class="sidebar">
+        <h2>Bank Admin Panel</h2>
+        <a th:href="@{/admindashboard}">Dashboard</a>
+        <a th:href="@{/adminuser}">Users</a>
+        <a th:href="@{/adminaccount}">Accounts</a>
+        <a th:href="@{/adminRequest}">Account Requests</a>
+        <a th:href="@{/transaction}">Transactions</a>
+        <a th:href="@{/atmApplications}">ATM Application Requests</a>
+        <a class="active" th:href="@{/userReports}">User Reports</a>
+        <a th:href="@{/reports}">Reports</a>
+        <a class="logout" href="/logout">Logout</a>
+    </div>
+
+    <div class="main">
+        <div class="top">
+            <div>
+                <h2>User Reports</h2>
+                <small>View messages submitted by users through the help center</small>
+            </div>
+            <div><strong th:text="${#dates.format(#dates.createNow(),'dd MMM yyyy')}"></strong></div>
+        </div>
+
+        <div class="page-card">
+            <h3 class="page-title" style="margin-bottom: 10px;">All User Reports</h3>
+            <p class="subtext" style="margin-top: 0;">Track user-reported issues, complaints, and support requests from one place.</p>
+
+            <div class="table-wrap">
+                <table class="admin-table">
+                    <tr>
+                        <th>ID</th>
+                        <th>Account Number</th>
+                        <th>User</th>
+                        <th>Subject</th>
+                        <th>Status</th>
+                        <th>Submitted</th>
+                    </tr>
+                    <tr th:each="report : ${reports}">
+                        <td th:text="${report.id}">1</td>
+                        <td th:text="${report.accountNumber}">1234567890</td>
+                        <td th:text="${report.reportedBy}">User</td>
+                        <td th:text="${report.subject}">Issue</td>
+                        <td><span class="badge badge-info" th:text="${report.status}">NEW</span></td>
+                        <td th:text="${#temporals.format(report.createdAt, 'dd MMM yyyy HH:mm')}">17 Apr 2026 10:30</td>
+                    </tr>
+                    <tr th:if="${reports == null or reports.isEmpty()}">
+                        <td colspan="6" class="subtext">No user reports submitted yet.</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

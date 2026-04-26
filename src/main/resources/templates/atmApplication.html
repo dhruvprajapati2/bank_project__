@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>ATM Card Application | Platinum Reserve Bank</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/banking.css">
+    <style>
+        body {
+            background: #f8fafc;
+            color: #0f172a;
+        }
+
+        .page-wrapper {
+            padding: 24px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            margin-bottom: 18px;
+        }
+
+        .card {
+            background: white;
+            padding: 28px;
+            border-radius: 20px;
+            box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
+        }
+
+        .card h2 {
+            margin-top: 0;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            padding: 12px 14px;
+            background: #f8fafc;
+            font-size: 0.95rem;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 130px;
+        }
+
+        .btn-submit {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 12px;
+            background: #0284c7;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .success-message {
+            margin-bottom: 18px;
+            padding: 14px 18px;
+            border-radius: 12px;
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .error-message {
+            margin-bottom: 18px;
+            padding: 14px 18px;
+            border-radius: 12px;
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .info-panel {
+            margin-top: 24px;
+            background: #eff6ff;
+            padding: 20px;
+            border-radius: 16px;
+            color: #1d4ed8;
+        }
+
+        .info-panel ul {
+            margin: 0;
+            padding-left: 18px;
+            line-height: 1.8;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 18px;
+            color: #0369a1;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        @media (max-width: 640px) {
+            .page-wrapper {
+                padding: 14px 10px;
+            }
+
+            .card {
+                padding: 18px 14px;
+                border-radius: 14px;
+            }
+
+            .btn-submit {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-wrapper">
+        <div class="page-title">
+            <h1>Apply for an ATM Card</h1>
+            <p>Submit your ATM application details and receive a confirmation email once your request is received.</p>
+        </div>
+
+        <div class="card">
+            <div th:if="${successMessage != null}" class="success-message" th:text="${successMessage}"></div>
+            <div th:if="${errorMessage != null}" class="error-message" th:text="${errorMessage}"></div>
+
+            <form action="/atmApplication" method="post">
+                <div class="form-group">
+                    <label for="accountNumber">Account Number</label>
+                    <input type="text" id="accountNumber" th:value="${accountNumber}" readonly />
+                </div>
+                <div class="form-group">
+                    <label for="email">Registered Email</label>
+                    <input type="email" id="email" th:value="${email}" readonly />
+                </div>
+                <div class="form-group">
+                    <label for="mobile">Mobile Number</label>
+                    <input type="tel" id="mobile" name="mobile" th:value="${mobile}" required />
+                </div>
+                <div class="form-group">
+                    <label for="address">Home Address</label>
+                    <textarea id="address" name="address" required placeholder="Enter your current address"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="cardType">ATM Card Type</label>
+                    <select id="cardType" name="cardType" required>
+                        <option value="Classic">Classic</option>
+                        <option value="Platinum">Platinum</option>
+                        <option value="Premium">Premium</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="comments">Additional Comments</label>
+                    <textarea id="comments" name="comments" placeholder="Any additional instructions or requests"></textarea>
+                </div>
+                <button type="submit" class="btn-submit" th:disabled="${errorMessage != null}"
+                    th:style="${errorMessage != null} ? 'opacity:0.6;cursor:not-allowed;' : ''">Submit ATM Application</button>
+            </form>
+
+            <div class="info-panel">
+                <h3>What happens next?</h3>
+                <ul>
+                    <li>Your request will be reviewed by our ATM services team.</li>
+                    <li>You will receive a confirmation email with next steps.</li>
+                    <li>ATM card dispatch and activation details will be shared by email.</li>
+                </ul>
+            </div>
+
+            <a href="/userdashboard" class="back-link"><i class="fas fa-arrow-left"></i>Back to Dashboard</a>
+        </div>
+    </div>
+</body>
+
+</html>

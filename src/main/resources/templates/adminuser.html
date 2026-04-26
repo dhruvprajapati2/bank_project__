@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Users</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/admin-panel.css">
+</head>
+
+<body class="admin-body">
+    <div class="sidebar">
+        <h2>Bank Admin Panel</h2>
+        <a th:href="@{/admindashboard}">Dashboard</a>
+        <a class="active" th:href="@{/adminuser}">Users</a>
+        <a th:href="@{/adminaccount}">Accounts</a>
+        <a th:href="@{/adminRequest}">Account Requests</a>
+        <a th:href="@{/transaction}">Transactions</a>
+        <a th:href="@{/atmApplications}">ATM Application Requests</a>
+        <a th:href="@{/userReports}">User Reports</a>
+        <a th:href="@{/reports}">Reports</a>
+        <a class="logout" href="/logout">Logout</a>
+    </div>
+
+    <div class="main">
+        <div class="top">
+            <div>
+                <h2>Users Management</h2>
+                <small>View all registered users</small>
+            </div>
+            <div><strong th:text="${#dates.format(#dates.createNow(),'dd MMM yyyy')}"></strong></div>
+        </div>
+
+        <div class="page-card">
+            <h3 class="page-title" style="margin-bottom: 10px;">All Users</h3>
+
+            <div class="table-wrap" th:if="${users != null and !users.isEmpty()}">
+                <table class="admin-table">
+                    <tr>
+                        <th>S.No</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Mobile</th>
+                        <th>Status</th>
+                        <th>Balance</th>
+                    </tr>
+                    <tr th:each="user, stat : ${users}">
+                        <td th:text="${stat.index + 1}"></td>
+                        <td th:text="${user.firstName}"></td>
+                        <td th:text="${user.lastName}"></td>
+                        <td th:text="${user.email}"></td>
+                        <td th:text="${user.mobile}"></td>
+                        <td>
+                            <span class="badge"
+                                  th:classappend="${user.status == 'APPROVED'} ? ' badge-success' : (${user.status == 'PENDING'} ? ' badge-warning' : ' badge-danger')"
+                                  th:text="${user.status}"></span>
+                        </td>
+                        <td>&#8377; <span th:text="${#numbers.formatDecimal(user.balance, 1, 2)}">0.00</span></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div th:if="${users == null or users.isEmpty()}" class="subtext">No users found.</div>
+        </div>
+    </div>
+</body>
+
+</html>

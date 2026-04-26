@@ -1,0 +1,221 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Edit Profile</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/banking.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        .edit-wrap {
+            width: min(980px, 95%);
+            margin: 26px auto;
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 14px;
+        }
+
+        .panel {
+            background: rgba(255, 255, 255, 0.98);
+            border: 1px solid #bfdbfe;
+            border-radius: 16px;
+            box-shadow: 0 14px 30px rgba(2, 132, 199, 0.12);
+            padding: 18px;
+        }
+
+        .panel h2 {
+            margin: 0 0 12px;
+            color: #0f172a;
+            font-size: 1.25rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 10px 12px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 4px;
+            color: #334155;
+            font-size: 0.88rem;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+        }
+
+        .action-row {
+            margin-top: 14px;
+            display: grid;
+            gap: 10px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        }
+
+        .msg {
+            margin-top: 8px;
+            padding: 9px 10px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+
+        .msg.ok {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .msg.err {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .pin-toggle {
+            width: 100%;
+            text-align: left;
+            font-weight: 700;
+        }
+
+        .pin-process {
+            display: none;
+            margin-top: 10px;
+        }
+
+        body.pin-open .pin-process {
+            display: block;
+        }
+
+        @media (max-width: 900px) {
+            .edit-wrap {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body th:classappend="${pinOtpSent != null or pinError != null or pinMsg != null} ? ' pin-open' : ''">
+    <div class="navbar">
+        <div class="navbar-left">
+            <a href="/userdashboard" class="btn"><i class="fas fa-house"></i> Back to Home</a>
+            <a href="/profile" class="btn"><i class="fas fa-user"></i> My Profile</a>
+        </div>
+    </div>
+
+    <div class="edit-wrap">
+        <div class="panel">
+            <h2><i class="fas fa-user-pen"></i> Edit Profile</h2>
+
+            <form th:action="@{/updateProfile}" method="post" th:object="${user}">
+                <div class="grid">
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" th:field="*{firstName}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" th:field="*{lastName}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" th:field="*{email}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Mobile</label>
+                        <input type="text" th:field="*{mobile}" maxlength="10" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Gender</label>
+                        <select th:field="*{gender}" required>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Date of Birth</label>
+                        <input type="date" th:field="*{dob}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Branch</label>
+                        <select th:field="*{branch}" required>
+                            <option value="Main Branch">Main Branch</option>
+                            <option value="City Branch">City Branch</option>
+                            <option value="Rural Branch">Rural Branch</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="action-row">
+                    <button type="submit" class="btn"><i class="fas fa-floppy-disk"></i> Update Profile</button>
+                    <a href="/profile" class="btn"><i class="fas fa-arrow-left"></i> Back</a>
+                </div>
+            </form>
+
+            <div th:if="${msg}" class="msg ok" th:text="${msg}"></div>
+            <div th:if="${errorMsg}" class="msg err" th:text="${errorMsg}"></div>
+        </div>
+
+        <div class="panel">
+            <h2><i class="fas fa-key"></i> Change PIN</h2>
+
+            <button type="button" id="pinToggleBtn" class="btn pin-toggle">
+                <i class="fas fa-key"></i> Change PIN
+            </button>
+
+            <div class="pin-process" id="pinProcess">
+                <form th:action="@{/changePin/sendOtp}" method="post">
+                    <div class="form-group">
+                        <label>Old PIN</label>
+                        <input type="password" name="oldPin" maxlength="4" pattern="[0-9]{4}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>New PIN</label>
+                        <input type="password" name="newPin" maxlength="4" pattern="[0-9]{4}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Confirm New PIN</label>
+                        <input type="password" name="confirmPin" maxlength="4" pattern="[0-9]{4}" required>
+                    </div>
+
+                    <button type="submit" class="btn"><i class="fas fa-paper-plane"></i> Send OTP</button>
+                </form>
+
+                <form th:if="${pinOtpSent}" th:action="@{/changePin/verifyOtp}" method="post" style="margin-top: 10px;">
+                    <div class="form-group">
+                        <label>Enter OTP</label>
+                        <input type="text" name="otp" maxlength="6" pattern="[0-9]{6}" required>
+                    </div>
+                    <button type="submit" class="btn"><i class="fas fa-check"></i> Verify OTP & Change PIN</button>
+                </form>
+
+                <div th:if="${pinMsg}" class="msg ok" th:text="${pinMsg}"></div>
+                <div th:if="${pinError}" class="msg err" th:text="${pinError}"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            const toggleBtn = document.getElementById("pinToggleBtn");
+            if (!toggleBtn) return;
+            toggleBtn.addEventListener("click", function () {
+                document.body.classList.toggle("pin-open");
+            });
+        })();
+    </script>
+</body>
+
+</html>

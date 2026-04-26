@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Transactions</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/admin-panel.css">
+</head>
+
+<body class="admin-body">
+    <div class="sidebar">
+        <h2>Bank Admin Panel</h2>
+        <a th:href="@{/admindashboard}">Dashboard</a>
+        <a th:href="@{/adminuser}">Users</a>
+        <a th:href="@{/adminaccount}">Accounts</a>
+        <a th:href="@{/adminRequest}">Account Requests</a>
+        <a class="active" th:href="@{/transaction}">Transactions</a>
+        <a th:href="@{/atmApplications}">ATM Application Requests</a>
+        <a th:href="@{/userReports}">User Reports</a>
+        <a th:href="@{/reports}">Reports</a>
+        <a class="logout" href="/logout">Logout</a>
+    </div>
+
+    <div class="main">
+        <div class="top">
+            <div>
+                <h2>All Transactions</h2>
+                <small>System-wide transaction history</small>
+            </div>
+            <div><strong th:text="${#dates.format(#dates.createNow(),'dd MMM yyyy')}"></strong></div>
+        </div>
+
+        <div class="page-card table-wrap">
+            <table class="admin-table">
+                <tr>
+                    <th>ID</th>
+                    <th>Account</th>
+                    <th>Type</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Note</th>
+                    <th>Method</th>
+                    <th>Amount (&#8377;)</th>
+                    <th>Date</th>
+                </tr>
+
+                <tr th:each="t : ${transactions}">
+                    <td th:text="${t.id}"></td>
+                    <td th:text="${t.accountNo}"></td>
+                    <td th:text="${t.type}"></td>
+                    <td th:text="${t.fromAccount != null ? t.fromAccount : '-'}"></td>
+                    <td th:text="${t.toAccount != null ? t.toAccount : '-'}"></td>
+                    <td th:text="${t.note != null and !#strings.isEmpty(t.note) ? t.note : '-'}"></td>
+                    <td th:text="${t.transferMethod != null and !#strings.isEmpty(t.transferMethod) ? t.transferMethod : '-'}"></td>
+                    <td>
+                        <span class="badge"
+                              th:classappend="${t.type != null and (t.type.contains('RECEIVED') or t.type.contains('DEPOSIT')) ? ' badge-success' : ' badge-danger'}"
+                        >&#8377; <span th:text="${#numbers.formatDecimal(t.amount, 1, 2)}">0.00</span></span>
+                    </td>
+                    <td th:text="${#temporals.format(t.date,'dd-MM-yyyy HH:mm')}"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>

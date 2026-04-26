@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Banking ChatBot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/banking.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(-45deg, #0f172a, #020617, #111827, #0b1221);
+            background-size: 400% 400%;
+            animation: bgMove 12s ease infinite;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        @keyframes bgMove {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .info-panel {
+            background: rgba(17, 24, 39, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid cyan;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+            animation: slideInLeft 0.6s ease;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .info-panel h2 {
+            color: cyan;
+            text-shadow: 0 0 10px cyan;
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin: 10px 0;
+            background: rgba(0, 255, 255, 0.05);
+            border-left: 4px solid cyan;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .info-item:hover {
+            background: rgba(0, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #aaa;
+        }
+
+        .info-value {
+            color: #fff;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .account-balance {
+            margin-top: 20px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(0, 200, 255, 0.2));
+            border-radius: 10px;
+            border: 2px solid rgba(0, 255, 255, 0.5);
+            text-align: center;
+        }
+
+        .balance-label {
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        .balance-amount {
+            font-size: 32px;
+            color: #00ff00;
+            font-weight: bold;
+            margin-top: 10px;
+            text-shadow: 0 0 10px #00ff00;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 10px;
+            background: linear-gradient(135deg, #0d6efd, #0056d2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+            font-weight: bold;
+            min-height: 45px;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px cyan;
+        }
+
+        .btn.logout {
+            background: linear-gradient(135deg, #ff4b4b, #ff0000);
+        }
+
+        .chatbot-panel {
+            background: rgba(17, 24, 39, 0.95);
+            padding: 0;
+            border-radius: 15px;
+            border: 2px solid cyan;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+            display: flex;
+            flex-direction: column;
+            animation: slideInRight 0.6s ease;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .chatbot-header {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.3), rgba(0, 150, 255, 0.3));
+            padding: 20px;
+            border-bottom: 2px solid cyan;
+            border-radius: 13px 13px 0 0;
+        }
+
+        .chatbot-header h2 {
+            color: cyan;
+            text-shadow: 0 0 10px cyan;
+            font-size: 20px;
+            margin: 0;
+        }
+
+        .chatbot-header p {
+            color: #aaa;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            min-height: 350px;
+            max-height: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            padding: 12px 15px;
+            border-radius: 10px;
+            max-width: 85%;
+            word-wrap: break-word;
+            animation: fadeIn 0.3s ease;
+            white-space: pre-line;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .user-message {
+            background: linear-gradient(135deg, #0d6efd, #0056d2);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+
+        .bot-message {
+            background: rgba(0, 255, 255, 0.15);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            color: #00ffff;
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+        }
+
+        .message-actions {
+            margin-top: 10px;
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: #04140b;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .download-btn:hover {
+            box-shadow: 0 0 14px rgba(34, 197, 94, 0.45);
+        }
+
+        .chat-input-section {
+            padding: 20px;
+            border-top: 2px solid rgba(0, 255, 255, 0.2);
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-wrap {
+            padding: 0 20px 16px;
+        }
+
+        .typed-preview {
+            min-height: 42px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(0, 255, 255, 0.24);
+            color: #dbeafe;
+            font-size: 13px;
+        }
+
+        .typed-preview strong {
+            color: cyan;
+        }
+
+        .chat-input-section input {
+            flex: 1;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid cyan;
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+        }
+
+        .chat-input-section input::placeholder {
+            color: #888;
+        }
+
+        .chat-input-section input:focus {
+            outline: none;
+            border-color: #00ff00;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+
+        .send-btn {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #00ff00, #00aa00);
+            border: none;
+            border-radius: 8px;
+            color: black;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+        }
+
+        .suggested-questions {
+            padding: 0 20px 15px;
+        }
+
+        .suggested-label {
+            color: #aaa;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .suggestion-btn {
+            display: inline-block;
+            padding: 6px 12px;
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid cyan;
+            color: cyan;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 3px;
+            font-size: 12px;
+            transition: 0.3s;
+        }
+
+        .suggestion-btn:hover {
+            background: rgba(0, 255, 255, 0.2);
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 255, 255, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: cyan;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00ffff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="info-panel">
+            <h2>Your Account</h2>
+
+            <div class="info-item">
+                <span class="info-label">Name:</span>
+                <span class="info-value" th:text="${user.firstName} + ' ' + ${user.lastName}">Name</span>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Account Number:</span>
+                <span class="info-value" th:text="${user.accountNumber}">Account</span>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Email:</span>
+                <span class="info-value" th:text="${user.email}">Email</span>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Mobile:</span>
+                <span class="info-value" th:text="${user.mobile}">Mobile</span>
+            </div>
+
+            <div class="info-item">
+                <span class="info-label">Account Type:</span>
+                <span class="info-value" th:text="${user.accountType}">Type</span>
+            </div>
+
+            <div class="account-balance">
+                <div class="balance-label">Current Balance</div>
+                <div class="balance-amount">&#8377; <span th:text="${#numbers.formatDecimal(account.balance, 1, 2)}">0.00</span></div>
+            </div>
+
+            <div class="nav-buttons">
+                <a href="/userdashboard" class="btn">Dashboard</a>
+                <a href="/myTransactions" class="btn">Transactions</a>
+                <a href="/userlogout" class="btn logout">Logout</a>
+            </div>
+        </div>
+
+        <div class="chatbot-panel">
+            <div class="chatbot-header">
+                <h2>Banking Assistant</h2>
+                <p>Ask about balance, profile, transactions, transfer help, or statement PDF.</p>
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot-message">
+                    Hello! I'm your banking assistant. I can help with balance, profile details, recent transactions, transfer guidance, and PDF statement downloads. What would you like to know?
+                </div>
+            </div>
+
+            <div class="suggested-questions">
+                <div class="suggested-label">Suggested Questions:</div>
+                <button class="suggestion-btn" onclick="sendMessage('What is my balance?')">Balance</button>
+                <button class="suggestion-btn" onclick="sendMessage('Show my recent transactions')">Recent Transactions</button>
+                <button class="suggestion-btn" onclick="sendMessage('Download my 1 month statement pdf')">1 Month PDF</button>
+                <button class="suggestion-btn" onclick="sendMessage('Download my 1 year statement pdf')">1 Year PDF</button>
+                <button class="suggestion-btn" onclick="sendMessage('Download statement from 2026-01-01 to 2026-03-31')">Custom Range</button>
+                <button class="suggestion-btn" onclick="sendMessage('How can I transfer money?')">Transfer Help</button>
+            </div>
+
+            <div class="chat-input-section">
+                <input type="text" id="userInput" placeholder="Type your message..." oninput="updateTypedPreview()" onkeypress="handleKeyPress(event)">
+                <button class="send-btn" onclick="sendMessage()">Send</button>
+            </div>
+            <div class="input-wrap">
+                <div class="typed-preview" id="typedPreview"><strong>Typed Preview:</strong> Nothing typed yet.</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function sendMessage(suggestedText = null) {
+            const input = document.getElementById('userInput');
+            const message = suggestedText || input.value.trim();
+
+            if (!message) return;
+
+            const messagesDiv = document.getElementById('chatMessages');
+            const userMsgDiv = document.createElement('div');
+            userMsgDiv.className = 'message user-message';
+            userMsgDiv.textContent = message;
+            messagesDiv.appendChild(userMsgDiv);
+
+            input.value = '';
+            updateTypedPreview();
+
+            fetch('/chatbot/response?message=' + encodeURIComponent(message), {
+                method: 'POST'
+            })
+                .then(response => response.json())
+                .then(data => {
+                    const botMsgDiv = document.createElement('div');
+                    botMsgDiv.className = 'message bot-message';
+                    botMsgDiv.textContent = data.message;
+
+                    if (data.downloadUrl) {
+                        const actionsDiv = document.createElement('div');
+                        actionsDiv.className = 'message-actions';
+
+                        const downloadLink = document.createElement('a');
+                        downloadLink.className = 'download-btn';
+                        downloadLink.href = data.downloadUrl;
+                        downloadLink.target = '_blank';
+                        downloadLink.textContent = data.downloadLabel || 'Download PDF';
+
+                        actionsDiv.appendChild(downloadLink);
+                        botMsgDiv.appendChild(actionsDiv);
+                    }
+
+                    messagesDiv.appendChild(botMsgDiv);
+                    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function updateTypedPreview() {
+            const input = document.getElementById('userInput');
+            const preview = document.getElementById('typedPreview');
+            const value = input.value.trim();
+
+            if (!value) {
+                preview.innerHTML = '<strong>Typed Preview:</strong> Nothing typed yet.';
+                return;
+            }
+
+            preview.innerHTML = '<strong>Typed Preview:</strong> ' + escapeHtml(value);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+
+</html>

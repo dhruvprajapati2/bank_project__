@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Account Requests</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/admin-panel.css">
+</head>
+
+<body class="admin-body">
+    <div class="sidebar">
+        <h2>Bank Admin Panel</h2>
+        <a th:href="@{/admindashboard}">Dashboard</a>
+        <a th:href="@{/adminuser}">Users</a>
+        <a th:href="@{/adminaccount}">Accounts</a>
+        <a class="active" th:href="@{/adminRequest}">Account Requests</a>
+        <a th:href="@{/transaction}">Transactions</a>
+        <a th:href="@{/atmApplications}">ATM Application Requests</a>
+        <a th:href="@{/userReports}">User Reports</a>
+        <a th:href="@{/reports}">Reports</a>
+        <a class="logout" href="/logout">Logout</a>
+    </div>
+
+    <div class="main">
+        <div class="top">
+            <div>
+                <h2>Account Opening Requests</h2>
+                <small>Approve pending account requests</small>
+            </div>
+            <div><strong th:text="${#dates.format(#dates.createNow(),'dd MMM yyyy')}"></strong></div>
+        </div>
+
+        <div class="page-card table-wrap">
+            <table class="admin-table">
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Mobile</th>
+                    <th>Email</th>
+                    <th>Gender</th>
+                    <th>DOB</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+                <tr th:each="r : ${requests}">
+                    <td th:text="${r.firstName}"></td>
+                    <td th:text="${r.lastName}"></td>
+                    <td th:text="${r.mobile}"></td>
+                    <td th:text="${r.email}"></td>
+                    <td th:text="${r.gender}"></td>
+                    <td th:text="${r.dob}"></td>
+                    <td>
+                        <span class="badge"
+                              th:classappend="${r.status == 'APPROVED'} ? ' badge-success' : (${r.status == 'PENDING'} ? ' badge-warning' : ' badge-danger')"
+                              th:text="${r.status}"></span>
+                    </td>
+                    <td>
+                        <form th:action="@{/approveRequest}" method="post" style="display:inline;">
+                            <input type="hidden" name="id" th:value="${r.id}">
+                            <button th:if="${r.status == 'PENDING'}" class="btn-admin" type="submit">Approve</button>
+                            <span th:unless="${r.status == 'PENDING'}" class="subtext" th:text="${r.status}"></span>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>

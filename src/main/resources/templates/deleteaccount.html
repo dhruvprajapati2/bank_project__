@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Delete Account</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI';
+    background: linear-gradient(-45deg, #0f172a, #020617, #111827, #0b1221);
+    background-size: 400% 400%;
+    animation: bgMove 12s ease infinite;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+@keyframes bgMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+.box {
+    background: rgba(17,24,39,0.9);
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid red;
+    text-align: center;
+}
+.btn-danger {
+    background: red;
+    border: none;
+    padding: 10px 20px;
+    margin: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.btn-danger:hover {
+    box-shadow: 0 0 15px red;
+}
+.btn-cancel {
+    background: cyan;
+    border: none;
+    padding: 10px 20px;
+    margin: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.btn-cancel:hover {
+    box-shadow: 0 0 15px cyan;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+    <h2>Are you sure?</h2>
+    <p>Do you really want to delete this account?</p>
+
+    <a th:href="@{'/admin/confirmDelete/' + ${account.id}}">
+        <button class="btn-danger">Yes, Delete</button>
+    </a>
+
+    <a th:href="@{/adminaccount}">
+        <button class="btn-cancel">Cancel</button>
+    </a>
+</div>
+
+</body>
+</html>

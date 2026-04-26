@@ -1,0 +1,196 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Platinum Reserve Bank | New Account</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/banking.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #eef8ff, #def7f7, #f4fbff) !important;
+        }
+
+        .register-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 12px;
+        }
+
+        .register-shell {
+            width: min(940px, 98%);
+            background: rgba(255, 255, 255, 0.99);
+            border: 1px solid #bae6fd;
+            border-radius: 20px;
+            box-shadow: 0 24px 48px rgba(14, 165, 233, 0.16);
+            padding: 24px;
+            animation: fadeIn 0.45s ease;
+        }
+
+        .head {
+            text-align: center;
+            margin-bottom: 18px;
+        }
+
+        .head h1 {
+            font-size: 1.9rem;
+            color: #0c4a6e;
+            margin-bottom: 4px;
+        }
+
+        .head p {
+            color: #475569;
+        }
+
+        .alert {
+            margin: 0 0 16px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .alert-error {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #b91c1c;
+        }
+
+        .register-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 12px 14px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #334155;
+            font-weight: 600;
+            font-size: 0.88rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+        }
+
+        .form-actions {
+            margin-top: 16px;
+            display: grid;
+            gap: 10px;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        }
+
+        .form-footer {
+            margin-top: 14px;
+            text-align: center;
+            color: #475569;
+        }
+
+        .form-footer a {
+            color: #0c4a6e;
+            font-weight: 700;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="register-page">
+        <div class="register-shell">
+            <div class="head">
+                <h1><i class="fas fa-building-columns"></i> Platinum Reserve Bank</h1>
+                <p>New Account Opening Form</p>
+            </div>
+
+            <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}"></div>
+
+            <form th:action="@{/registerUser}" method="post" th:object="${accountRequest}">
+                <div class="register-grid">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input id="firstName" th:field="*{firstName}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input id="lastName" th:field="*{lastName}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <select id="gender" th:field="*{gender}" required>
+                            <option value="">Select</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dob">Date of Birth</label>
+                        <input id="dob" type="date" th:field="*{dob}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="adharNo">Aadhar Number</label>
+                        <input id="adharNo" th:field="*{adharNo}" inputmode="numeric" pattern="[0-9]{12}" maxlength="12" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input id="email" type="email" th:field="*{email}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="mobile">Mobile Number</label>
+                        <input id="mobile" th:field="*{mobile}" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="branch">Branch</label>
+                        <select id="branch" th:field="*{branch}" required>
+                            <option value="Main Branch">Main Branch</option>
+                            <option value="City Branch">City Branch</option>
+                            <option value="Rural Branch">Rural Branch</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="accountType">Account Type</label>
+                        <select id="accountType" th:field="*{accountType}" required>
+                            <option value="Savings Account">Savings Account</option>
+                            <option value="Current Account">Current Account</option>
+                            <option value="Fixed Deposit">Fixed Deposit</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="balance">Opening Balance</label>
+                        <input id="balance" type="number" th:field="*{balance}" min="0" step="0.01" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pin">4 Digit PIN</label>
+                        <input id="pin" type="password" name="pin" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" required>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn" type="submit"><i class="fas fa-paper-plane"></i> Submit Request</button>
+                    <a th:href="@{/userlogin}" class="btn"><i class="fas fa-right-to-bracket"></i> Login Here</a>
+                </div>
+
+                <div class="form-footer">
+                    Already have an account? <a th:href="@{/userlogin}">Login Here</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

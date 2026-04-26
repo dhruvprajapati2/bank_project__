@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Admin Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/css/banking.css">
+
+    <style>
+        .admin-body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            background: linear-gradient(130deg, #e0f2fe, #dbeafe, #f8fdff);
+            color: #0f172a;
+        }
+
+        .sidebar {
+            width: 250px;
+            min-height: 100vh;
+            position: sticky;
+            top: 0;
+            background: linear-gradient(180deg, #0369a1, #0284c7);
+            padding: 18px 14px;
+        }
+
+        .sidebar h2 {
+            color: #fff;
+            text-align: center;
+            font-size: 1.1rem;
+            margin: 6px 0 16px;
+        }
+
+        .sidebar a {
+            display: block;
+            margin-bottom: 8px;
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 12px;
+            border-radius: 10px;
+            transition: 0.2s ease;
+            font-weight: 600;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(3px);
+        }
+
+        .sidebar .logout {
+            margin-top: 16px;
+            background: rgba(220, 38, 38, 0.22);
+        }
+
+        .main {
+            flex: 1;
+            padding: 18px;
+        }
+
+        .top {
+            background: rgba(255, 255, 255, 0.96);
+            border: 1px solid #bfdbfe;
+            border-radius: 14px;
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .top h2 {
+            margin: 0;
+            color: #0f172a;
+        }
+
+        .top small {
+            color: #64748b;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .card {
+            padding: 14px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.96);
+            border: 1px solid #bfdbfe;
+            box-shadow: 0 10px 25px rgba(2, 132, 199, 0.12);
+            animation: cardIn 0.35s ease both;
+        }
+
+        @keyframes cardIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card h3 {
+            margin: 0 0 6px;
+            font-size: 0.95rem;
+            color: #475569;
+        }
+
+        .card h2 {
+            margin: 0;
+            font-size: 1.35rem;
+            color: #0369a1;
+        }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .chart-card {
+            background: rgba(255, 255, 255, 0.96);
+            border: 1px solid #bfdbfe;
+            border-radius: 14px;
+            padding: 14px;
+            box-shadow: 0 10px 24px rgba(2, 132, 199, 0.12);
+        }
+
+        .chart-title {
+            margin: 0 0 10px;
+            color: #0f172a;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .chart-wrap {
+            height: 290px;
+            position: relative;
+        }
+
+        .chart-wrap.small {
+            height: 250px;
+        }
+
+        .insights-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 1.9fr;
+            gap: 12px;
+        }
+
+        .insight-panel {
+            background: linear-gradient(160deg, #0f172a, #0f3b66);
+            color: #e0f2fe;
+            border-radius: 14px;
+            padding: 18px;
+            box-shadow: 0 14px 30px rgba(15, 23, 42, 0.22);
+        }
+
+        .insight-panel h3,
+        .table-card h3 {
+            margin: 0 0 12px;
+            font-size: 1rem;
+        }
+
+        .insight-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .insight-item {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+            padding: 10px 12px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .insight-item span {
+            color: #bae6fd;
+            font-size: 0.92rem;
+        }
+
+        .insight-item strong {
+            font-size: 1rem;
+        }
+
+        .table-card {
+            background: rgba(255, 255, 255, 0.96);
+            border: 1px solid #bfdbfe;
+            border-radius: 14px;
+            padding: 14px;
+            box-shadow: 0 10px 24px rgba(2, 132, 199, 0.12);
+            overflow-x: auto;
+        }
+
+        .table-card table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table-card th,
+        .table-card td {
+            text-align: left;
+            padding: 10px 8px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.92rem;
+        }
+
+        .type-pill {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+
+        @media (max-width: 992px) {
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .insights-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                width: 215px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .admin-body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                min-height: auto;
+                position: static;
+            }
+
+            .top {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .main {
+                padding: 12px;
+            }
+
+            .sidebar a {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .chart-wrap {
+                height: 240px;
+            }
+
+            .chart-wrap.small {
+                height: 220px;
+            }
+
+            .insight-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .table-card {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body class="admin-body">
+    <div class="sidebar">
+        <h2>Bank Admin Panel</h2>
+        <a class="active" th:href="@{/admindashboard}">Dashboard</a>
+        <a th:href="@{/adminuser}">Users</a>
+        <a th:href="@{/adminaccount}">Accounts</a>
+        <a th:href="@{/adminRequest}">Account Requests</a>
+        <a th:href="@{/transaction}">Transactions</a>
+        <a th:href="@{/atmApplications}">ATM Application Requests</a>
+        <a th:href="@{/userReports}">User Reports</a>
+        <a th:href="@{/reports}">Reports</a>
+        <a class="logout" href="/logout">Logout</a>
+    </div>
+
+    <div class="main">
+        <div class="top">
+            <div>
+                <h2>Welcome Back, Admin</h2>
+                <small>Live monitoring for users, accounts and transactions</small>
+            </div>
+            <div>
+                <strong th:text="${#dates.format(#dates.createNow(),'dd MMM yyyy')}">Date</strong>
+            </div>
+        </div>
+
+        <div class="cards">
+            <div class="card">
+                <h3>Total Users</h3>
+                <h2 th:text="${totalUsers}">0</h2>
+            </div>
+            <div class="card">
+                <h3>Total Accounts</h3>
+                <h2 th:text="${totalAccounts}">0</h2>
+            </div>
+            <div class="card">
+                <h3>Total Balance</h3>
+                <h2>&#8377; <span th:text="${totalBalance}">0.00</span></h2>
+            </div>
+            <div class="card">
+                <h3>Today's Transactions</h3>
+                <h2 th:text="${todayTransactions}">0</h2>
+            </div>
+            <div class="card">
+                <h3>Pending Requests</h3>
+                <h2 th:text="${pendingRequests}">0</h2>
+            </div>
+            <div class="card">
+                <h3>ATM Applications</h3>
+                <h2 th:text="${atmApplicationCount}">0</h2>
+            </div>
+            <div class="card">
+                <h3>User Reports</h3>
+                <h2 th:text="${userReportsCount}">0</h2>
+            </div>
+        </div>
+
+        <div class="chart-grid">
+            <div class="chart-card">
+                <h3 class="chart-title">Last 7 Days Transaction Trend</h3>
+                <div class="chart-wrap">
+                    <canvas id="lineChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h3 class="chart-title">Transfer Method Distribution</h3>
+                <div class="chart-wrap small">
+                    <canvas id="pieChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="insights-grid">
+            <div class="insight-panel">
+                <h3 style="color:white">Monthly Intelligence</h3>
+                <div class="insight-list">
+                    <div class="insight-item">
+                        <span>This Month Transactions</span>
+                        <strong th:text="${monthlyTransactions}">0</strong>
+                    </div>
+                    <div class="insight-item">
+                        <span>This Month Volume</span>
+                        <strong>&#8377; <span th:text="${monthlyVolume}">0.00</span></strong>
+                    </div>
+                    <div class="insight-item">
+                        <span>NEFT vs RTGS</span>
+                        <strong><span th:text="${neftTransactions}">0</span> / <span
+                                th:text="${rtgsTransactions}">0</span></strong>
+                    </div>
+                    <div class="insight-item">
+                        <span>Highest Transaction</span>
+                        <strong>&#8377; <span th:text="${highestTransactionAmount}">0.00</span></strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-card">
+                <h3>Recent Transaction Pulse</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>From</th>
+                            <th>To</th>
+                            <th>Type</th>
+                            <th>Method</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="txn : ${recentTransactions}">
+                            <td th:text="${txn.fromAccount}">Sender</td>
+                            <td th:text="${txn.toAccount}">Receiver</td>
+                            <td><span class="type-pill" th:text="${txn.type}">TRANSFER</span></td>
+                            <td th:text="${txn.method}">NEFT</td>
+                            <td>&#8377; <span th:text="${txn.amount}">0.00</span></td>
+                        </tr>
+                        <tr th:if="${recentTransactions == null or recentTransactions.isEmpty()}">
+                            <td colspan="5">No recent transactions found.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="table-card">
+                <h3>Latest User Reports</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Account</th>
+                            <th>Subject</th>
+                            <th>Status</th>
+                            <th>Submitted</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="report : ${latestReports}">
+                            <td th:text="${report.reportedBy}">User</td>
+                            <td th:text="${report.subject}">Subject</td>
+                            <td th:text="${report.status}">NEW</td>
+                            <td th:text="${#temporals.format(report.createdAt, 'dd MMM yyyy HH:mm')}">Date</td>
+                        </tr>
+                        <tr th:if="${latestReports == null or latestReports.isEmpty()}">
+                            <td colspan="4">No user reports yet.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div style="margin-top: 10px; text-align: right;">
+                    <a th:href="@{/userReports}" style="font-weight: 600; color: #0369a1;">View all reports →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        const lineLabels = /*[[${lineChartLabels}]]*/[];
+        const lineValues = /*[[${lineChartValues}]]*/[];
+        const pieLabels = /*[[${pieChartLabels}]]*/[];
+        const pieValues = /*[[${pieChartValues}]]*/[];
+
+        new Chart(document.getElementById('lineChart'), {
+            type: 'bar',
+            data: {
+                labels: lineLabels,
+                datasets: [{
+                    label: 'Transactions',
+                    data: lineValues,
+                    borderColor: '#0284c7',
+                    backgroundColor: 'rgba(14, 165, 233, 0.35)',
+                    borderWidth: 2,
+                    borderRadius: 8,
+                    maxBarThickness: 38
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0,
+                            color: '#334155'
+                        },
+                        grid: {
+                            color: 'rgba(148, 163, 184, 0.25)'
+                        }
+                    },
+                    x: {
+                        ticks: { color: '#334155' },
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('pieChart'), {
+            type: 'doughnut',
+            data: {
+                labels: pieLabels,
+                datasets: [{
+                    data: pieValues,
+                    backgroundColor: ['#0ea5e9', '#0369a1', '#7dd3fc'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '62%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#334155',
+                            padding: 12
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

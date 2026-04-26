@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Platinum Reserve Bank | Enter PIN</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/banking.css">
+
+    <style>
+        .pin-page {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pin-body {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .pin-card {
+            width: min(410px, 94%);
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 16px;
+            border: 1px solid #bfdbfe;
+            padding: 26px 22px;
+            text-align: center;
+            box-shadow: 0 16px 34px rgba(2, 132, 199, 0.2);
+            animation: pinIn 0.4s ease;
+        }
+
+        @keyframes pinIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .pin-card h2 {
+            margin-bottom: 16px;
+            font-size: 1.4rem;
+            color: #0f172a;
+        }
+
+        .pin-card input {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.25rem;
+            text-align: center;
+            letter-spacing: 8px;
+            border-radius: 10px;
+            border: 1px solid #cbd5e1;
+            margin-bottom: 14px;
+            outline: none;
+        }
+
+        .pin-card input:focus {
+            border-color: #0ea5e9;
+            box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.2);
+        }
+
+        .pin-card button {
+            width: 100%;
+        }
+
+        .error-message {
+            margin-top: 10px;
+            color: #dc2626;
+            font-weight: 600;
+        }
+
+        .back-home {
+            margin-top: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #0369a1;
+            font-weight: 600;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 14px;
+            color: #334155;
+        }
+    </style>
+</head>
+
+<body class="pin-page">
+    <div class="navbar">
+        <div class="navbar-left">
+            <a href="/userdashboard" class="btn"><i class="fas fa-house"></i> Back to Home</a>
+            <a href="/profile" class="btn"><i class="fas fa-user"></i> Profile</a>
+        </div>
+        <div class="navbar-right">
+            <a href="/userdashboard" class="btn"><i class="fas fa-arrow-left"></i> Dashboard</a>
+        </div>
+    </div>
+
+    <div class="pin-body">
+        <div class="pin-card">
+            <h2><i class="fas fa-lock"></i> Enter 4 Digit PIN</h2>
+
+            <form th:action="@{/checkPin}" method="post">
+                <input type="password" name="pin" pattern="[0-9]{4}" maxlength="4" required>
+                <button type="submit" class="btn"><i class="fas fa-check"></i> Verify PIN</button>
+            </form>
+
+            <p th:if="${error}" class="error-message">Wrong PIN. Please try again.</p>
+            <a href="/userdashboard" class="back-home"><i class="fas fa-house"></i> Back to Home</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        Copyright 2026 Platinum Reserve Bank | Secure Digital Banking
+    </footer>
+</body>
+
+</html>

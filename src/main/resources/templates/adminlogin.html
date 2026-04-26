@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Admin Login</title>
+
+<style>
+
+/* ===== Animated Background ===== */
+
+body {
+    margin: 0;
+    padding: 16px;
+    font-family: 'Segoe UI';
+    min-height: 100vh;
+    overflow-x: hidden;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /* Animated gradient */
+    background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #1f4037);
+    background-size: 400% 400%;
+    animation: gradientMove 10s ease infinite;
+}
+
+/* Gradient animation */
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Floating particles */
+body::before {
+    content: "";
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background-image:
+      radial-gradient(#00e5ff 1px, transparent 1px),
+      radial-gradient(#ffffff 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.15;
+    animation: particleMove 20s linear infinite;
+}
+
+@keyframes particleMove {
+    from { transform: translate(0, 0); }
+    to { transform: translate(-50px, -50px); }
+}
+
+/* ===== Floating Animation ===== */
+@keyframes float {
+    0% { transform: translate(-50%, -50%) translateY(0px); }
+    50% { transform: translate(-50%, -50%) translateY(-10px); }
+    100% { transform: translate(-50%, -50%) translateY(0px); }
+}
+
+/* ===== Glass Box ===== */
+.box {
+    width: min(360px, 100%);
+    padding: 25px;
+    position: relative;
+
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(12px);
+    border-radius: 15px;
+    box-shadow: 0 0 20px black;
+
+    animation: float 4s infinite ease-in-out;
+}
+
+@media (max-width: 480px) {
+    .box {
+        padding: 20px 16px;
+        border-radius: 12px;
+    }
+
+    h2 {
+        font-size: 1.3rem;
+    }
+}
+
+/* ===== Title ===== */
+h2 {
+    color: #00e5ff;
+    text-align: center;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px #00e5ff;
+}
+
+/* ===== Input Style ===== */
+.inputBox {
+    margin-top: 20px;
+}
+
+.inputBox input {
+    width: 100%;
+    padding: 10px;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid #00e5ff;
+    color: white;
+    outline: none;
+    transition: 0.4s;
+}
+
+.inputBox input:focus {
+    border-bottom: 2px solid yellow;
+    box-shadow: 0 8px 10px -6px yellow;
+}
+
+/* ===== Button ===== */
+.btn {
+    margin-top: 25px;
+    width: 100%;
+    padding: 10px;
+    background: #00e5ff;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    background: yellow;
+}
+
+/* ===== Error ===== */
+.error {
+    color: #ff4b4b;
+    text-align: center;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>BANK ADMIN</h2>
+
+<p class="error" th:text="${error}"></p>
+
+<form th:action="@{/adminlogin}" method="post">
+
+<div class="inputBox">
+    <input type="email" name="email" placeholder="Enter Email" required />
+</div>
+
+<div class="inputBox">
+    <input type="password" name="password" placeholder="Enter Password" required />
+</div>
+
+<button class="btn">LOGIN</button>
+
+<p th:text="${error}" style="color:red"></p>
+</form>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Reports</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/admin-panel.css">
+</head>
+
+<body class="admin-body">
+    <div class="sidebar">
+        <h2>Bank Admin Panel</h2>
+        <a th:href="@{/admindashboard}">Dashboard</a>
+        <a th:href="@{/adminuser}">Users</a>
+        <a th:href="@{/adminaccount}">Accounts</a>
+        <a th:href="@{/adminRequest}">Account Requests</a>
+        <a th:href="@{/transaction}">Transactions</a>
+        <a th:href="@{/atmApplications}">ATM Application Requests</a>
+        <a th:href="@{/userReports}">User Reports</a>
+        <a class="active" th:href="@{/reports}">Reports</a>
+        <a class="logout" href="/logout">Logout</a>
+    </div>
+
+    <div class="main">
+        <div class="top">
+            <div>
+                <h2>Reports</h2>
+                <small>Month-wise transaction analytics with sender, receiver, method and remarks</small>
+            </div>
+            <div><strong th:text="${#dates.format(#dates.createNow(),'dd MMM yyyy')}"></strong></div>
+        </div>
+
+        <div class="cards">
+            <div class="card">
+                <h3>Total Users</h3>
+                <h2 th:text="${totalUsers}">0</h2>
+            </div>
+            <div class="card">
+                <h3>Total Accounts</h3>
+                <h2 th:text="${totalAccounts}">0</h2>
+            </div>
+            <div class="card">
+                <h3>Total Balance</h3>
+                <h2>&#8377; <span th:text="${totalBalance}">0.00</span></h2>
+            </div>
+            <div class="card">
+                <h3>Today Transactions</h3>
+                <h2 th:text="${todayTransactions}">0</h2>
+            </div>
+            <div class="card">
+                <h3>Pending Requests</h3>
+                <h2 th:text="${pendingRequests}">0</h2>
+            </div>
+            <div class="card">
+                <h3>Approved Requests</h3>
+                <h2 th:text="${approvedRequests}">0</h2>
+            </div>
+        </div>
+
+        <div class="page-card" th:if="${monthlyReports != null and !monthlyReports.isEmpty()}">
+            <h3 class="page-title">Month Wise Transaction Report</h3>
+            <div th:each="monthReport : ${monthlyReports}" style="margin-top: 18px;">
+                <div style="display:flex; justify-content:space-between; gap:12px; align-items:center; margin-bottom:10px; flex-wrap:wrap;">
+                    <div>
+                        <h4 style="margin:0; color:#0f172a;" th:text="${monthReport.monthLabel}">March 2026</h4>
+                        <small class="subtext">
+                            Transactions: <span th:text="${monthReport.transactionCount}">0</span>
+                            |
+                            Total Volume: &#8377; <span th:text="${monthReport.totalAmount}">0.00</span>
+                        </small>
+                    </div>
+                </div>
+
+                <div class="table-wrap">
+                    <table class="admin-table">
+                        <tr>
+                            <th>ID</th>
+                            <th>Date</th>
+                            <th>Sender</th>
+                            <th>Receiver</th>
+                            <th>Type</th>
+                            <th>Method</th>
+                            <th>Remark</th>
+                            <th>Amount</th>
+                        </tr>
+                        <tr th:each="txn : ${monthReport.transactions}">
+                            <td th:text="${txn.id}">1</td>
+                            <td th:text="${txn.transactionDate}">26 Mar 2026, 10:30 AM</td>
+                            <td th:text="${txn.fromAccount}">Sender</td>
+                            <td th:text="${txn.toAccount}">Receiver</td>
+                            <td><span class="badge badge-info" th:text="${txn.type}">TRANSFER</span></td>
+                            <td th:text="${txn.method}">NEFT</td>
+                            <td th:text="${txn.remark}">Payment</td>
+                            <td>&#8377; <span th:text="${#numbers.formatDecimal(txn.amount, 1, 2)}">0.00</span></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-card" th:if="${monthlyReports == null or monthlyReports.isEmpty()}">
+            <h3 class="page-title">Month Wise Transaction Report</h3>
+            <p class="subtext">No transactions found yet, so the monthly report is currently empty.</p>
+        </div>
+    </div>
+</body>
+
+</html>
