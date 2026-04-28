@@ -62,7 +62,12 @@ public class UserLoginController {
     @Autowired
     private StatementPdfService statementPdfService;
 
-    @GetMapping("/register")
+    @GetMapping({"/", "/index"})
+    public String home() {
+        return "index";
+    }
+
+    @GetMapping({"/register", "/register.html"})
     public String register(Model model) {
         if (!model.containsAttribute("accountRequest")) {
             model.addAttribute("accountRequest", new AccountRequest());
@@ -1048,15 +1053,19 @@ public class UserLoginController {
     }
 
     private record ChatbotContext(Account account, AccountRequest user, List<Transaction> transactions) {
+
     }
 
     private record StatementRequest(String label, String downloadUrl) {
+
     }
 
     private record DateRangeRequest(LocalDate fromDate, LocalDate toDate) {
+
     }
 
     private record StatementPeriod(LocalDate fromDate, LocalDate toDate, String label, String fileLabel) {
+
     }
 
 }
